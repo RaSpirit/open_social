@@ -34,13 +34,15 @@ function social_comment_form_comment_form_alter(&$form, FormStateInterface $form
   // Validate replies to comments deeper than 1.
   $form['#validate'][] = 'social_comment_form_reply_validate';
 
+  $route_match = \Drupal::routeMatch();
+
   // Comment reply form.
-  if (\Drupal::routeMatch()->getRouteName() === 'comment.reply') {
+  if ($route_match->getRouteName() === 'comment.reply' && $route_match->getParameter('pid')) {
     $form['actions']['submit']['#value'] = t('Reply');
     $form['field_comment_body']['widget'][0]['#placeholder'] = t('Add a reply');
   }
   // Comment edit form.
-  if (\Drupal::routeMatch()->getRouteName() === 'entity.comment.edit_form') {
+  if ($route_match->getRouteName() === 'entity.comment.edit_form') {
     $form['actions']['submit']['#value'] = t('Submit');
     $form['#title'] = t('Edit comment');
   }
