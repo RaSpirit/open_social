@@ -54,11 +54,15 @@ class SocialCommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
+    $comment = NULL;
+
     switch ($route_match->getRouteName()) {
       case 'comment.reply':
         $page_title = $this->t('Reply to Comment');
         $pid = $route_match->getParameter('pid');
-        $comment = $this->storage->load($pid);
+        if ($pid) {
+          $comment = $this->storage->load($pid);
+        }
         break;
 
       case 'entity.comment.edit_form':
