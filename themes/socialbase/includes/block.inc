@@ -46,8 +46,12 @@ function socialbase_theme_suggestions_block_alter(array &$suggestions, array $va
  * @param $variables
  */
 function socialbase_preprocess_block(&$variables) {
+  // Find out what the active theme is first.
+  $theme = \Drupal::theme()->getActiveTheme();
+
   $profile_user_id = \Drupal::routeMatch()->getParameter('user');
   $block = \Drupal\block\Entity\Block::load($variables['elements']['#id']);
+  $route_name = \Drupal::routeMatch()->getRouteName();
 
   // Fetch the current active (sub)theme.
   $theme = \Drupal::theme()->getActiveTheme();
@@ -87,6 +91,16 @@ function socialbase_preprocess_block(&$variables) {
       $variables['card'] = FALSE;
     }
 
+  }
+
+  // wrap the group/membership table in a card element.
+  if (isset($variables['elements']['#plugin_id']) && $variables['elements']['#plugin_id'] == 'system_main_block' && $route_name == 'entity.group_content.collection') {
+    $variables['card'] = TRUE;
+  }
+
+  // Show group managers block in a card
+  if ($variables['elements']['#derivative_plugin_id'] == 'group_managers-block_list_managers') {
+    $variables['card'] = TRUE;
   }
 
   // for all platform_intro blocks we want them to appear as cards.
