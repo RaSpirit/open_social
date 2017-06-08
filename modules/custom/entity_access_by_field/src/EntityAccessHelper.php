@@ -18,9 +18,11 @@ class EntityAccessHelper {
     if ($op === 'view') {
       // Check published status.
       if (isset($node->status) && $node->status->value == NODE_NOT_PUBLISHED) {
-        $unpublished_own = $account->hasPermission('view own unpublished content');
-        if(($node->getOwnerId() !== $account->id()) || ($node->getOwnerId() === $account->id() && !$unpublished_own)){
-          return 1;
+        if (!$account->hasPermission('view any unpublished content')) {
+          $unpublished_own = $account->hasPermission('view own unpublished content');
+          if(($node->getOwnerId() !== $account->id()) || ($node->getOwnerId() === $account->id() && !$unpublished_own)){
+            return 1;
+          }
         }
       }
 
